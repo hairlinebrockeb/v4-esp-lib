@@ -144,11 +144,12 @@ function esp.getcharacter(plr)
 end
 
 function esp.checkalive(plr)
-    if not plr then plr = localPlayer end
-    local pass = false
-    if (plr.Character and plr.Character:FindFirstChild('Humanoid') and plr.Character:FindFirstChild('Head') and plr.Character:FindFirstChild('LeftUpperArm') and plr.Character.Humanoid.Health > 0 and plr.Character.LeftUpperArm.Transparency == 0) then
-        pass = true
-    end
+    -- if not plr then plr = localPlayer end
+    -- local pass = false
+    -- if (plr.Character and plr.Character:FindFirstChild('Humanoid') and plr.Character:FindFirstChild('Head') and plr.Character:FindFirstChild('LeftUpperArm') and plr.Character.Humanoid.Health > 0 and plr.Character.LeftUpperArm.Transparency == 0) then
+    --     pass = true
+    -- end
+    local pass = character and character:FindFirstChild('Humanoid') and character.Humanoid.Health > 0
     return pass
 end
 
@@ -298,13 +299,11 @@ function esp:clearconnections()
 end
 
 function esp:update()
-    for plr, drawing in next, esp.players do
-        local player = players:FindFirstChild(plr)
-        if not player then esp.players[plr] = nil continue end
-        if esp.enabled and esp.checkalive(player) then
-            local character = esp.getcharacter(player)
+    for character, drawing in next, esp.render do
+        if not character then esp.render[character] = nil continue end
+        if esp.enabled and esp.checkalive(character) then
             local playerName = LEN(plr) > esp.maxchar and esp.shortnames and SUB(plr, 0, esp.maxchar) .. '..' or plr
-            local pass = esp:check(player)
+            local pass = true; --esp:check(player)
             local distance = tostring(FLOOR((character.PrimaryPart.CFrame.p - camera.CFrame.p).Magnitude  / 3))  .. 'm'
             local _, onScreen = camera:WorldToViewportPoint(character['HumanoidRootPart'].Position)
             local centerMassPos = character['HumanoidRootPart'].CFrame
@@ -315,18 +314,11 @@ function esp:update()
                 factor = esp.fadefactor
             })
             local kevlar = 0
-            if player:FindFirstChild('Kevlar') then
-                kevlar = player.Kevlar.Value
-            end
             local health = FLOOR(character.Humanoid.Health)
 
             local flag = 'team_'
             if esp.checkteam(player, false) then
                 flag = 'enemy_'
-            end
-
-            if TFIND(esp.priority_players, player) then
-                flag = 'priority_'
             end
 
             if not (pass and onScreen) then
@@ -543,7 +535,7 @@ function esp:update()
             drawing.weapon.Visible = esp[ flag .. 'weapon'][1]
             drawing.weapon_outline.Visible = esp.outlines and drawing.weapon.Visible
             if drawing.weapon.Visible then
-                drawing.weapon.Text = LOWER(character.EquippedTool.Value) or nil
+                drawing.weapon.Text = character:FindFirstChildWhichIsA('Tool') and character:FindFirstChildWhichIsA('Tool').Name or nil
                 drawing.weapon.Font = Drawing.Fonts[esp.font]
                 drawing.weapon.Size = esp.textsize
                 drawing.weapon.Color = esp[ flag .. 'weapon'][2]
