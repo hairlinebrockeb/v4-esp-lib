@@ -271,16 +271,29 @@ function esp:add(character)
         weapon = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13 }),
         health = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13, Center = true });
         object = character;
+        disable = false;
     }
     local chams = { ins = esp:create('Highlight', { Name = character.Name }) }
     function chams:Remove() chams.ins:Destroy() end
     objs['chams'] = chams
     self.render[character.Name] = objs
 end
+
+esp.change_esp_color = function(c)
+    local change = {'enemy_names'  'team_boxes' 'enemy_boxes' 'team_names'}
+    for i, tbl in next, esp do 
+        if i == change then 
+            esp[i][2] = c
+        end;
+    end;
+end
+
 function esp:disable(character)
     local objects = self.render[character.Name];
-    if objects then
+    if objects and self.render.disabled == false then
+        self.render.disabled = true
         for i, v in next, objects do
+            if i == 'disabled' then continue end;
             if i == 'chams' then
                 v.ins.Enabled = false
             else
@@ -291,6 +304,23 @@ function esp:disable(character)
         end;
     end;
 end;
+function esp:enable(character)
+    local objects = self.render[character.Name];
+    if objects and self.render.disabled == true then
+        self.render.disabled = false
+        for i, v in next, objects do
+            if i == 'disabled' then continue end;
+            if i == 'chams' then
+                v.ins.Enabled = true
+            else
+                if typeof(v) ~= 'Instance' then 
+                    v.Visible = true
+                end;
+            end
+        end;
+    end;
+end;
+
 function esp:remove(character)
     local objects = self.render[character.Name];
     if objects then
@@ -456,6 +486,23 @@ function esp:update()
             local smallestY, biggestY = math.huge, -math.huge
 
             local selection = character.Humanoid.RigType == Enum.HumanoidRigType.R6 and esp.charOffsets.r6 or esp.charOffsets.r15
+            if not character:FindFirstChild(selection.larm) then 
+                if selection == esp.charOffsets.r6 then 
+                    selection = esp.charOffsets.r15;
+                else
+                    selection = esp.charOffsets.r6
+                end;    
+            end;
+            if not character:FindFirstChild(selection.larm) then 
+                esp:disable(character)
+                continue;
+            end;
+
+
+            if drawing.disabled == true then 
+                esp:enable(character)
+            end;
+
 
             local y = (centerMassPos.p - character['Head'].Position).magnitude + character['Head'].Size.Y / 2
             local x1 = (centerMassPos.p - character[selection.rarm].Position).magnitude -- r a s m
@@ -594,7 +641,7 @@ function esp:update()
             end
         else
             esp:disable(character)
-            warn('diable', character.Name)
+            --warn('diable', character.Name)
         end
     end
 end
