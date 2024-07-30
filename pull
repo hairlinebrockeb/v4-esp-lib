@@ -306,7 +306,7 @@ function esp:disable(character)
 end;
 function esp:enable(character)
     local objects = self.render[character.Name];
-    if objects and self.render.disabled == true then
+    if objects  then -- and self.render.disabled == true
         self.render.disabled = false
         for i, v in next, objects do
             if i == 'disabled' then continue end;
