@@ -284,7 +284,9 @@ function esp:disable(character)
             if i == 'chams' then
                 v.ins.Enabled = false
             else
-                v.Visible = false
+                if typeof(v) ~= 'Instance' then 
+                    v.Visible = false
+                end;
             end
         end;
     end;
