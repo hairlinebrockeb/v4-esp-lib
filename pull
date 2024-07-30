@@ -453,7 +453,7 @@ function esp:update()
             local smallestX, biggestX = math.huge, -math.huge
             local smallestY, biggestY = math.huge, -math.huge
 
-            local selection = character.Humanoid.RigType == Enum.RigType.R6 and esp.charOffsets.r6 or esp.charOffsets.r15
+            local selection = character.Humanoid.RigType == Enum.HumanoidRigType.R6 and esp.charOffsets.r6 or esp.charOffsets.r15
 
             local y = (centerMassPos.p - character['Head'].Position).magnitude + character['Head'].Size.Y / 2
             local x1 = (centerMassPos.p - character[selection.rarm].Position).magnitude -- r a s m
