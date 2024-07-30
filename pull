@@ -271,7 +271,7 @@ function esp:add(character)
         weapon = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13 }),
         health = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13, Center = true });
         object = character;
-        disable = false;
+        disable = true;
     }
     local chams = { ins = esp:create('Highlight', { Name = character.Name }) }
     function chams:Remove() chams.ins:Destroy() end
