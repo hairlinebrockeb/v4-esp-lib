@@ -269,7 +269,8 @@ function esp:add(character)
         distance = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13 }),
         weapon_outline = esp:draw('Text', { Color = NEWCOLOR3(), Font = 2, Size = 13 }),
         weapon = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13 }),
-        health = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13, Center = true })
+        health = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13, Center = true });
+        object = character;
     }
     local chams = { ins = esp:create('Highlight', { Name = character.Name }) }
     function chams:Remove() chams.ins:Destroy() end
@@ -321,8 +322,9 @@ function esp:clearconnections()
 end
 
 function esp:update()
-    for character, drawing in next, esp.render do
-        if not character then esp.render[character] = nil continue end
+    for _character, drawing in next, esp.render do
+        local character = drawing.object;
+        if not character then esp.render[_character] = nil continue end
         if esp.enabled and esp.checkalive(character) then
             local playerName = LEN(character.Name) > esp.maxchar and esp.shortnames and SUB(character.Name, 0, esp.maxchar) .. '..' or character.Name
             local pass = true; --esp:check(player)
