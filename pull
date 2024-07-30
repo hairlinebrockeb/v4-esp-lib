@@ -2,7 +2,29 @@
 local runService = game:GetService('RunService')
 local coregui = game:GetService('CoreGui')
 local players = game:GetService('Players')
-local localPlayer = players.LocalPlayer
+local localPlayer = {}; local metaforit = {}; setmetatable(localPlayer,metaforit);
+metaforit.__index = function(table, key)
+    local quickuses = {
+        character = game.Players.LocalPlayer.Character;
+        humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid') or nil;
+        humanoidrootpart = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') or nil;
+        health = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid') and game.Players.LocalPlayer.Character:FindFirstChild('Humanoid').Health or nil;
+        cframe =  game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame or nil;
+        parts = game.Players.LocalPlayer.Character and parts;
+        rootPart = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart') or nil;
+        instance = game.Players.LocalPlayer;
+        mouse = game.Players.LocalPlayer:GetMouse();
+    }
+    for i,v in next, quickuses do 
+        if tostring(i) == tostring(key) then 
+            return v
+        end
+    end
+    if not metaforit[key] then 
+        return nil
+    end
+    return metaforit[key]
+end
 local camera = workspace.CurrentCamera
 
 local esp = {
@@ -65,7 +87,7 @@ local esp = {
     textsize = 13,
 
     -- tables
-    players = {},
+    render = {},
     priority_players = {},
     connections = {},
     visiblecheckparams = {}
@@ -138,23 +160,23 @@ function esp:raycast(a, b, c)
     end
     return ray
 end
+function esp:GetPlayerFromCharacter(char)
+    return game.Players:GetPlayerFromCharacter(char)
+end
 
 function esp.getcharacter(plr)
     return plr.Character
 end
 
-function esp.checkalive(plr)
-    -- if not plr then plr = localPlayer end
-    -- local pass = false
-    -- if (plr.Character and plr.Character:FindFirstChild('Humanoid') and plr.Character:FindFirstChild('Head') and plr.Character:FindFirstChild('LeftUpperArm') and plr.Character.Humanoid.Health > 0 and plr.Character.LeftUpperArm.Transparency == 0) then
-    --     pass = true
-    -- end
+function esp.checkalive()
     local pass = character and character:FindFirstChild('Humanoid') and character.Humanoid.Health > 0
     return pass
 end
 
-function esp.checkteam(plr, bool)
-    if not plr then plr = localPlayer end
+function esp.checkteam(char, bool)
+    --if not plr then plr = localPlayer end
+    local plr = esp:GetPlayerFromCharacter(char)
+    if not plr then return true end;
     return plr ~= localPlayer and bool or plr.Team ~= localPlayer.Team
 end
 
@@ -218,8 +240,8 @@ function esp:rotatevector2(v2, r)
 	return NEWVEC2(c * v2.X - s * v2.Y, s * v2.X + c * v2.Y);
 end;
 --
-function esp:add(plr)
-    if plr == localPlayer then return end
+function esp:add(character)
+    if character == localPlayer.character then return end
     local objs = {
         box_fill = esp:draw('Square', { Filled = true, Thickness = 1 }),
         box_outline = esp:draw('Square', { Filled = false, Thickness = 1 }),
@@ -249,13 +271,13 @@ function esp:add(plr)
         weapon = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13 }),
         health = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13, Center = true })
     }
-    local chams = { ins = esp:create('Highlight', { Name = plr.Name }) }
+    local chams = { ins = esp:create('Highlight', { Name = character.Name }) }
     function chams:Remove() chams.ins:Destroy() end
     objs['chams'] = chams
-    self.players[plr.Name] = objs
+    self.render[character.Name] = objs
 end
-function esp:disable(plr)
-    local objects = self.players[plr.Name];
+function esp:disable(character)
+    local objects = self.render[character.Name];
     if objects then
         for i, v in next, objects do
             if i == 'chams' then
@@ -266,14 +288,14 @@ function esp:disable(plr)
         end;
     end;
 end;
-function esp:remove(plr)
-    local objects = self.players[plr.Name];
+function esp:remove(character)
+    local objects = self.render[character.Name];
     if objects then
         for i, v in next, objects do
             v:Remove()
         end;
     end;
-    self.players[plr.Name] = nil;
+    self.render[character.Name] = nil;
 end;
 -- connections
 function esp:connect(a, callback)
@@ -302,7 +324,7 @@ function esp:update()
     for character, drawing in next, esp.render do
         if not character then esp.render[character] = nil continue end
         if esp.enabled and esp.checkalive(character) then
-            local playerName = LEN(plr) > esp.maxchar and esp.shortnames and SUB(plr, 0, esp.maxchar) .. '..' or plr
+            local playerName = LEN(character.Name) > esp.maxchar and esp.shortnames and SUB(character.Name, 0, esp.maxchar) .. '..' or character.Name
             local pass = true; --esp:check(player)
             local distance = tostring(FLOOR((character.PrimaryPart.CFrame.p - camera.CFrame.p).Magnitude  / 3))  .. 'm'
             local _, onScreen = camera:WorldToViewportPoint(character['HumanoidRootPart'].Position)
@@ -548,20 +570,34 @@ function esp:update()
                 drawing.weapon_outline.Transparency = transparency
             end
         else
-            esp:disable(player)
+            esp:disable(character)
         end
     end
 end
 
+local function addCharacter(player, __character)
+    player.CharacterAdded:Connect(function()
+        esp:add(player.Character)
+    end)
+    player.CharacterRemoving:Connect(function()
+        esp:remove(player.Character)
+    end)
+    if player.Character then 
+        esp:add(player.Character)
+    end;
+end;
+
 for i, plr in next, players:GetPlayers() do
-    esp:add(plr)
+    addCharacter(plr)
 end
-esp:connect(players.PlayerAdded, function(plr)
-    esp:add(plr)
+esp:connect(players.PlayerAdded, function(player)
+    addCharacter(player)
 end)
-esp:connect(players.PlayerRemoving, function(plr)
-    esp:remove(plr)
+esp:connect(players.PlayerRemoving, function(player)
+    addCharacter(player)
 end)
+
+-- esp.flag.maximumrenderdistance = 
 
 esp:bindtorenderstep('esp', 999, esp.update)
 
