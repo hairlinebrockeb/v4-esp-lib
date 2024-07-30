@@ -177,7 +177,7 @@ function esp.checkteam(char, bool)
     --if not plr then plr = localPlayer end
     local plr = esp:GetPlayerFromCharacter(char)
     if not plr then return true end;
-    return plr ~= localPlayer and bool or plr.Team ~= localPlayer.Team
+    return plr ~= localPlayer and bool or plr.Team ~= localPlayer.instance.Team
 end
 
 function esp:checkvisible(instance, origin, params)
@@ -339,12 +339,12 @@ function esp:update()
             local health = FLOOR(character.Humanoid.Health)
 
             local flag = 'team_'
-            if esp.checkteam(player, false) then
+            if esp.checkteam(character, false) then
                 flag = 'enemy_'
             end
 
             if not (pass and onScreen) then
-                esp:disable(player)
+                esp:disable(character)
             end
 
             -- arrows
@@ -417,7 +417,7 @@ function esp:update()
 
             -- chams
             drawing.chams.ins.Enabled = esp[ flag .. 'chams'][1] and pass
-            drawing.chams.ins.Adornee = esp[ flag .. 'chams'][1] and player.Character or nil
+            drawing.chams.ins.Adornee = esp[ flag .. 'chams'][1] and character or nil
             drawing.chams.ins.Parent = folder
             if drawing.chams.ins.Enabled then
                 drawing.chams.ins.FillColor = esp[ flag .. 'chams'][2]
