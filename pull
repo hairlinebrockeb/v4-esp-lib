@@ -471,18 +471,18 @@ function esp:update()
             end;
 
             -- chams
-            drawing.chams.ins.Enabled = esp[ flag .. 'chams'][1] and pass
-            drawing.chams.ins.Adornee = esp[ flag .. 'chams'][1] and character or nil
-            pcall(function()
-                drawing.chams.ins.Parent = folder
-            end)
-            if drawing.chams.ins.Enabled then
-                drawing.chams.ins.FillColor = esp[ flag .. 'chams'][2]
-                drawing.chams.ins.OutlineColor = esp[ flag .. 'chams'][3]
-                drawing.chams.ins.FillTransparency = esp[ flag .. 'chams'][4]
-                drawing.chams.ins.OutlineTransparency = esp[ flag .. 'chams'][5]
-                drawing.chams.ins.DepthMode = esp[ flag .. 'chams'][6] and Enum.HighlightDepthMode.AlwaysOnTop or Enum.HighlightDepthMode.Occluded
-            end;
+            -- drawing.chams.ins.Enabled = esp[ flag .. 'chams'][1] and pass
+            -- drawing.chams.ins.Adornee = esp[ flag .. 'chams'][1] and character or nil
+            -- pcall(function()
+            --     drawing.chams.ins.Parent = folder
+            -- end)
+            -- if drawing.chams.ins.Enabled then
+            --     drawing.chams.ins.FillColor = esp[ flag .. 'chams'][2]
+            --     drawing.chams.ins.OutlineColor = esp[ flag .. 'chams'][3]
+            --     drawing.chams.ins.FillTransparency = esp[ flag .. 'chams'][4]
+            --     drawing.chams.ins.OutlineTransparency = esp[ flag .. 'chams'][5]
+            --     drawing.chams.ins.DepthMode = esp[ flag .. 'chams'][6] and Enum.HighlightDepthMode.AlwaysOnTop or Enum.HighlightDepthMode.Occluded
+            -- end;
 
             if not pass or (not onScreen) then
                 continue
