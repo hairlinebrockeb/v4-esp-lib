@@ -271,7 +271,7 @@ function esp:add(character)
         weapon = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13 }),
         health = esp:draw('Text', { Color = NEWCOLOR3(1,1,1), Font = 2, Size = 13, Center = true });
         object = character;
-        disable = true;
+        disabled = true;
     }
     local chams = { ins = esp:create('Highlight', { Name = character.Name }) }
     function chams:Remove() chams.ins:Destroy() end
@@ -377,6 +377,10 @@ function esp:update()
         if esp.enabled and esp.checkalive(character) then
             local playerName = LEN(character.Name) > esp.maxchar and esp.shortnames and SUB(character.Name, 0, esp.maxchar) .. '..' or character.Name
             local pass = true; --esp:check(player)
+            if not character.PrimaryPart then 
+                esp:disable(character)
+                continue
+            end;
             local distance = tostring(FLOOR((character.PrimaryPart.CFrame.p - camera.CFrame.p).Magnitude  / 3))  .. 'm'
             local _, onScreen = camera:WorldToViewportPoint(character['HumanoidRootPart'].Position)
             local centerMassPos = character['HumanoidRootPart'].CFrame
