@@ -280,7 +280,7 @@ function esp:add(character)
 end
 
 esp.change_esp_color = function(c)
-    local change = {'enemy_names'  'team_boxes' 'enemy_boxes' 'team_names'}
+    local change = {'enemy_names' , 'team_boxes' ,'enemy_boxes' ,'team_names'}
     for i, tbl in next, esp do 
         if i == change then 
             esp[i][2] = c
