@@ -325,7 +325,9 @@ function esp:remove(character)
     local objects = self.render[character.Name];
     if objects then
         for i, v in next, objects do
-            v:Remove()
+            pcall(function()
+                v:Remove()
+            end)
         end;
     end;
     self.render[character.Name] = nil;
