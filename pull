@@ -168,7 +168,7 @@ function esp.getcharacter(plr)
     return plr.Character
 end
 
-function esp.checkalive()
+function esp.checkalive(character)
     local pass = character and character:FindFirstChild('Humanoid') and character.Humanoid.Health > 0
     return pass
 end
