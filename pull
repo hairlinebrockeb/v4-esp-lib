@@ -473,7 +473,9 @@ function esp:update()
             -- chams
             drawing.chams.ins.Enabled = esp[ flag .. 'chams'][1] and pass
             drawing.chams.ins.Adornee = esp[ flag .. 'chams'][1] and character or nil
-            drawing.chams.ins.Parent = folder
+            pcall(function()
+                drawing.chams.ins.Parent = folder
+            end)
             if drawing.chams.ins.Enabled then
                 drawing.chams.ins.FillColor = esp[ flag .. 'chams'][2]
                 drawing.chams.ins.OutlineColor = esp[ flag .. 'chams'][3]
