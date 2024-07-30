@@ -571,6 +571,7 @@ function esp:update()
             end
         else
             esp:disable(character)
+            warn('diable', character.Name)
         end
     end
 end
@@ -583,12 +584,13 @@ local function addCharacter(player, __character)
         esp:remove(player.Character)
     end)
     if player.Character then 
+        warn('esp add', player.Name)
         esp:add(player.Character)
     end;
 end;
 
-for i, plr in next, players:GetPlayers() do
-    addCharacter(plr)
+for i, player in next, game.Players:GetPlayers() do
+    addCharacter(player)
 end
 esp:connect(players.PlayerAdded, function(player)
     addCharacter(player)
