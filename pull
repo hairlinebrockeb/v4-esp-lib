@@ -627,7 +627,7 @@ function esp:update()
             drawing.weapon.Visible = esp[ flag .. 'weapon'][1]
             drawing.weapon_outline.Visible = esp.outlines and drawing.weapon.Visible
             if drawing.weapon.Visible then
-                drawing.weapon.Text = character:FindFirstChildWhichIsA('Tool') and character:FindFirstChildWhichIsA('Tool').Name or nil
+                drawing.weapon.Text = character:FindFirstChildWhichIsA('Tool') and character:FindFirstChildWhichIsA('Tool').Name or ''
                 drawing.weapon.Font = Drawing.Fonts[esp.font]
                 drawing.weapon.Size = esp.textsize
                 drawing.weapon.Color = esp[ flag .. 'weapon'][2]
