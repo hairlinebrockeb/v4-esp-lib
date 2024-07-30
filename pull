@@ -40,7 +40,7 @@ local esp = {
     maxdistance = 1200,
     fadefactor = 20,
     arrowradius = 500,
-    arrowsize = 20,
+    arrowsize = 35, -- 20
     arrowinfo = false,
 
     -- instances
@@ -48,27 +48,27 @@ local esp = {
     team_chams = { false, Color3.new(1, 1, 1), Color3.new(1, 1, 1), .25, .75, true },
     --
     team_boxes = { false, Color3.new(), Color3.new(), 0.95 },
-    team_healthbar = { false, Color3.new(), Color3.new() },
+    team_healthbar = { true, Color3.fromRGB(0, 255,0 ), Color3.new() },
     team_kevlarbar = { false, Color3.new(), Color3.new() },
     team_arrow = { false, Color3.new(), 0.5 },
     --
-    team_names = { false, Color3.new()},
+    team_names = { true, Color3.new()},
     team_weapon = { false, Color3.new()},
     team_distance = false,
-    team_health = false,
+    team_health = true,
 
     --\ @enemies
     enemy_chams = { false, Color3.new(1, 1, 1), Color3.new(1, 1, 1), .25, .75, true },
     --
     enemy_boxes = { false, Color3.new(), Color3.new(), 0.95 },
-    enemy_healthbar = { false, Color3.new(), Color3.new() },
+    enemy_healthbar = { true, Color3.new(), Color3.new() },
     enemy_kevlarbar = { false, Color3.new(), Color3.new() },
     enemy_arrow = { false, Color3.new(), 0.5 },
     --
-    enemy_names = { false, Color3.new()},
+    enemy_names = { true, Color3.new()},
     enemy_weapon = { false, Color3.new()},
-    enemy_distance = false,
-    enemy_health = false,
+    enemy_distance = true,
+    enemy_health = true,
 
     --\ @priority
     priority_chams = { false, Color3.new(1, 1, 1), Color3.new(1, 1, 1), .25, .75, true },
