@@ -3,7 +3,7 @@ return function()
         task.wait(0.5);
         local function getBanHandler()
             local banHandler;
-            for i,v in next, getreg() do 
+            for i,v in next, getgc() do 
                 if type(v) ~= 'function' then continue end;
                 if banHandler then break end;
             
