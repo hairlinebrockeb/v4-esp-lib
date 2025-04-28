@@ -1,0 +1,36 @@
+return function()
+    if game.GameId == 6762670894 then 
+        task.wait(0.5);
+        local function getBanHandler()
+            local banHandler;
+            for i,v in next, getreg() do 
+                if type(v) ~= 'function' then continue end;
+                if banHandler then break end;
+            
+                pcall(function()
+                    local constants = debug.getconstants(v);
+                    for index, value in next, constants do 
+                        if value == 'BANNED' then 
+                            banHandler = v;
+                        end;
+                    end;
+                end)
+            end;
+
+            return banHandler
+        end;
+
+        local banHandler; 
+        repeat 
+            task.wait(0.1);
+            if banHandler then 
+                break;
+            end;
+            banHandler = getBanHandler()
+        until banHandler
+        
+        hookfunction(banHandler, function()
+            return 'done u dirty';
+        end)
+    end;
+end
